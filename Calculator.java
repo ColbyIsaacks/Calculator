@@ -7,17 +7,15 @@ import java.awt.event.ActionListener;
 
 public class Calculator {
 	
-	private static int width = 1000;
-	private static int height = 500;
-//	final static int FIELD_WIDTH = 10;
-//	final static int VERT_STRUT = 20;
+	private static int width = 300;
+	private static int height = 600;
 	static private final JPanel topPanel = new JPanel();
 	static JPanel bottomPanel = new JPanel();
 	static JTextField field = new JTextField(30);
-	static GridLayout gridLayout = new GridLayout(3, 4);
+	static GridLayout gridLayout = new GridLayout(6, 3);
 	
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) {										// MAIN
 		SwingUtilities.invokeLater(new Runnable() {
         	@Override
             public void run() {
@@ -27,7 +25,7 @@ public class Calculator {
 	}
 	
 	
-	public static void createAndShowGUI() {
+	public static void createAndShowGUI() {											//creates UI
 		
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		JFrame frame = new JFrame("Calculator");
@@ -36,8 +34,7 @@ public class Calculator {
 		
 		int windowsWidth = width;
 		int windowsHeight = height;
-		frame.setBounds((width - windowsWidth ) / 2,
-                (height - windowsHeight) / 2, windowsWidth, windowsHeight);
+		frame.setBounds((width - windowsWidth ) / 2, (height - windowsHeight) / 2, windowsWidth, windowsHeight);
         
 		frame.setContentPane(panelContainer);
 		panelContainer.setLayout(boxLayout);
@@ -49,11 +46,10 @@ public class Calculator {
 	}
 	
 	
-	public static void createPanels() {											// lays out the buttons for the user to see
+	public static void createPanels() {												// lays out the buttons for the user to see
 		
 		topPanel.add(field);
 		bottomPanel.setLayout(gridLayout);
-		//JTextArea textArea = new JTextArea();
 	
 		JButton button1 = new JButton("1");
 		JButton button2 = new JButton("2");
@@ -70,9 +66,10 @@ public class Calculator {
 		JButton buttonPlus = new JButton("+");
 		JButton buttonMin = new JButton("-");
 		JButton buttonEq = new JButton("=");
+		JButton buttonClear = new JButton("C");
 
 		
-		button1.addActionListener(new ActionListener() {						// this section adds action listeners for each of the 14 buttons
+		button1.addActionListener(new ActionListener() {							// this section adds action listeners for each of the 14 buttons
 			public void actionPerformed(ActionEvent e) {
 				if(e.getSource() == button1) {
 					addNumToField(1);
@@ -136,7 +133,7 @@ public class Calculator {
 		});
 		button0.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(e.getSource() == button9) {
+				if(e.getSource() == button0) {
 					addNumToField(0);
 				}
 			}
@@ -176,9 +173,15 @@ public class Calculator {
 				}
 			}
 		});
+		buttonClear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(e.getSource() == buttonClear) {
+					field.setText("");
+				}
+			}
+		});
 		
-		
-		bottomPanel.add(button1);														//adds all buttons to bottom panel
+		bottomPanel.add(button1);													//adds all buttons to bottom panel
 		bottomPanel.add(button2);
 		bottomPanel.add(button3);
 		bottomPanel.add(button4);
@@ -193,6 +196,7 @@ public class Calculator {
 		bottomPanel.add(buttonPlus);
 		bottomPanel.add(buttonMin);
 		bottomPanel.add(buttonEq);
+		bottomPanel.add(buttonClear);
 	
 	}
 	
@@ -214,6 +218,27 @@ public class Calculator {
 	
 	public static void calculate(JTextField field) {
 		String equation = field.getText();
+		char[] equationChar = equation.toCharArray();
+		int result = 0;
+		
+		for(int i = 0; i < equationChar.length; i++) {
+			if(equationChar[i] == ' ') {
+				if(equationChar[i + 1] == '+') {
+					result = Character.getNumericValue(equationChar[i - 1]) + Character.getNumericValue(equationChar[i + 3]);
+				}
+				if(equationChar[i + 1] == '-') {
+					result = Character.getNumericValue(equationChar[i - 1]) - Character.getNumericValue(equationChar[i + 3]);
+				}
+				if(equationChar[i + 1] == '*') {
+					result = Character.getNumericValue(equationChar[i - 1]) * Character.getNumericValue(equationChar[i + 3]);
+				}
+				if(equationChar[i + 1] == '/') {
+					result = Character.getNumericValue(equationChar[i - 1]) / Character.getNumericValue(equationChar[i + 3]);
+				}
+			}
+		}
+		
+		field.setText(Integer.toString(result));
 	}
 	
 }
