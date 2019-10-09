@@ -185,7 +185,7 @@ public class Calculator {
 		buttonBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(e.getSource() == buttonBack) {
-					addNumToField(2);
+					backSpace(field);
 				}
 			}
 		});
@@ -226,10 +226,14 @@ public class Calculator {
 	}
 	
 	
-	public static void backSpace(JTextField field) {
-//		String text = field.getText();
-//		char[] textChar = text.toCharArray();
-		
+	public static void backSpace(JTextField field) {							// deletes last entered value in text field (a bit sloppy but it works) 
+		String text = field.getText();
+		String newText = "";
+		char[] textChar = text.toCharArray();
+		for(int i = 0; i < textChar.length - 1; i++) {
+			newText += textChar[i];
+		}
+		field.setText(newText);
 	}
 	
 	
