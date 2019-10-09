@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -11,8 +10,10 @@ public class Calculator {
 	private static int height = 600;
 	static private final JPanel topPanel = new JPanel();
 	static JPanel bottomPanel = new JPanel();
-	static JTextField field = new JTextField(30);
+	static JTextField field = new JTextField(10);
 	static GridLayout gridLayout = new GridLayout(6, 3);
+	static char operator;
+	static int result;
 	
 	
 	public static void main(String[] args) {										// MAIN
@@ -25,7 +26,7 @@ public class Calculator {
 	}
 	
 	
-	public static void createAndShowGUI() {											//creates UI
+	public static void createAndShowGUI() {											// creates UI
 		
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		JFrame frame = new JFrame("Calculator");
@@ -61,12 +62,13 @@ public class Calculator {
 		JButton button8 = new JButton("8");
 		JButton button9 = new JButton("9");
 		JButton button0 = new JButton("0");
-		JButton buttonMult = new JButton("X");
+		JButton buttonMult = new JButton("*");
 		JButton buttonDiv = new JButton("/");
 		JButton buttonPlus = new JButton("+");
 		JButton buttonMin = new JButton("-");
 		JButton buttonEq = new JButton("=");
 		JButton buttonClear = new JButton("C");
+		JButton buttonBack = new JButton("<-");
 
 		
 		button1.addActionListener(new ActionListener() {							// this section adds action listeners for each of the 14 buttons
@@ -180,8 +182,15 @@ public class Calculator {
 				}
 			}
 		});
+		buttonBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(e.getSource() == buttonBack) {
+					addNumToField(2);
+				}
+			}
+		});
 		
-		bottomPanel.add(button1);													//adds all buttons to bottom panel
+		bottomPanel.add(button1);												// adds all buttons to bottom panel
 		bottomPanel.add(button2);
 		bottomPanel.add(button3);
 		bottomPanel.add(button4);
@@ -197,48 +206,79 @@ public class Calculator {
 		bottomPanel.add(buttonMin);
 		bottomPanel.add(buttonEq);
 		bottomPanel.add(buttonClear);
+		bottomPanel.add(buttonBack);
 	
 	}
 	
 	
-	public static void addNumToField(int number) {
+	public static void addNumToField(int number) {								// adds number to text field
 		field.setEditable(true);
 		String text = field.getText();
 		text += number;
 		field.setText(text);		
 	}
 	
-	
-	public static void addOperatorToField(String operator) {
+		
+	public static void addOperatorToField(String operator) {					// adds operator (+ - * /) to text field
 		String text = field.getText();
 		text = text + " " + operator + " ";
 		field.setText(text);
 	}
 	
 	
-	public static void calculate(JTextField field) {
-		String equation = field.getText();
-		char[] equationChar = equation.toCharArray();
-		int result = 0;
+	public static void backSpace(JTextField field) {
+//		String text = field.getText();
+//		char[] textChar = text.toCharArray();
 		
-		for(int i = 0; i < equationChar.length; i++) {
-			if(equationChar[i] == ' ') {
-				if(equationChar[i + 1] == '+') {
-					result = Character.getNumericValue(equationChar[i - 1]) + Character.getNumericValue(equationChar[i + 3]);
-				}
-				if(equationChar[i + 1] == '-') {
-					result = Character.getNumericValue(equationChar[i - 1]) - Character.getNumericValue(equationChar[i + 3]);
-				}
-				if(equationChar[i + 1] == '*') {
-					result = Character.getNumericValue(equationChar[i - 1]) * Character.getNumericValue(equationChar[i + 3]);
-				}
-				if(equationChar[i + 1] == '/') {
-					result = Character.getNumericValue(equationChar[i - 1]) / Character.getNumericValue(equationChar[i + 3]);
-				}
-			}
-		}
-		
-		field.setText(Integer.toString(result));
 	}
 	
+	
+	public static void calculate(JTextField field) {							// calculates the result given the text field
+		String equation = field.getText();
+		char[] equationChar = equation.toCharArray();
+		String num1 = "";
+		String num2 = "";
+		boolean spaceHasHappened = false;
+		
+		for(int i = 0; i < equationChar.length; i++) {
+			if(equationChar[i] != ' ' && spaceHasHappened == false) {
+				num1 += equationChar[i];
+			}
+			else if(equationChar[i] == ' ') {
+				spaceHasHappened = true;
+				continue;
+			}
+				
+			else if(equationChar[i] == '+') {
+				operator = '+';			}
+			else if(equationChar[i] == '-') {
+				operator = '-';
+			}
+			else if(equationChar[i] == '*') {
+				operator = '*';
+			}
+			else if(equationChar[i] == '/') {
+				operator = '/';
+			}
+			else if(equationChar[i] == ' ' && spaceHasHappened == true) {
+				continue;
+			}
+			else if(equationChar[i] != ' ' && spaceHasHappened == true) {
+				num2 += equationChar[i];
+			}
+		}	
+		if(operator == '+') {
+			result = Integer.parseInt(num1) + Integer.parseInt(num2);
+		}
+		if(operator == '-') {
+			result = Integer.parseInt(num1) - Integer.parseInt(num2);
+		}
+		if(operator == '*') {
+			result = Integer.parseInt(num1) * Integer.parseInt(num2);
+		}
+		if(operator == '/') {
+			result = Integer.parseInt(num1) / Integer.parseInt(num2);
+		}
+		field.setText(Integer.toString(result));
+	}
 }
