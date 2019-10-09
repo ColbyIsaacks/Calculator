@@ -13,7 +13,7 @@ public class Calculator {
 	static JTextField field = new JTextField(10);
 	static GridLayout gridLayout = new GridLayout(6, 3);
 	static char operator;
-	static int result;
+	static float result;
 	
 	
 	public static void main(String[] args) {										// MAIN
@@ -62,6 +62,7 @@ public class Calculator {
 		JButton button8 = new JButton("8");
 		JButton button9 = new JButton("9");
 		JButton button0 = new JButton("0");
+		JButton buttonDec = new JButton(".");
 		JButton buttonMult = new JButton("*");
 		JButton buttonDiv = new JButton("/");
 		JButton buttonPlus = new JButton("+");
@@ -140,6 +141,13 @@ public class Calculator {
 				}
 			}
 		});
+		buttonDec.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(e.getSource() == buttonDec) {
+					addDecimalPoint();
+				}
+			}
+		});
 		buttonMult.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(e.getSource() == buttonMult) {
@@ -200,6 +208,7 @@ public class Calculator {
 		bottomPanel.add(button8);
 		bottomPanel.add(button9);
 		bottomPanel.add(button0);
+		bottomPanel.add(buttonDec);
 		bottomPanel.add(buttonMult);
 		bottomPanel.add(buttonDiv);
 		bottomPanel.add(buttonPlus);
@@ -216,6 +225,13 @@ public class Calculator {
 		String text = field.getText();
 		text += number;
 		field.setText(text);		
+	}
+	
+	
+	public static void addDecimalPoint(){
+		String text = field.getText();
+		text += ".";
+		field.setText(text);
 	}
 	
 		
@@ -248,15 +264,28 @@ public class Calculator {
 			if(equationChar[i] != ' ' && spaceHasHappened == false) {
 				num1 += equationChar[i];
 			}
-			else if(equationChar[i] == ' ') {
+			else if(equationChar[i] == ' ' && i == 0) {
+				spaceHasHappened = false;
+			}
+			else if(equationChar[i] == ' ' && equationChar[i + 1] != '-') {
 				spaceHasHappened = true;
-				continue;
 			}
 				
 			else if(equationChar[i] == '+') {
-				operator = '+';			}
+				operator = '+';			
+			}
 			else if(equationChar[i] == '-') {
-				operator = '-';
+				if(i == 1){									//allows user to input negative numbers
+					spaceHasHappened = false;
+					//num1 += equationChar[i];
+					//backSpace(field);
+				}
+				else if(spaceHasHappened == true){
+					num2 += equationChar[i];
+				}
+				else{
+					operator = '-';
+				}
 			}
 			else if(equationChar[i] == '*') {
 				operator = '*';
@@ -272,17 +301,17 @@ public class Calculator {
 			}
 		}	
 		if(operator == '+') {
-			result = Integer.parseInt(num1) + Integer.parseInt(num2);
+			result = Float.parseFloat(num1) + Float.parseFloat(num2);
 		}
 		if(operator == '-') {
-			result = Integer.parseInt(num1) - Integer.parseInt(num2);
+			result = Float.parseFloat(num1) - Float.parseFloat(num2);
 		}
 		if(operator == '*') {
-			result = Integer.parseInt(num1) * Integer.parseInt(num2);
+			result = Float.parseFloat(num1) * Float.parseFloat(num2);
 		}
 		if(operator == '/') {
-			result = Integer.parseInt(num1) / Integer.parseInt(num2);
+			result = Float.parseFloat(num1) / Float.parseFloat(num2);
 		}
-		field.setText(Integer.toString(result));
+		field.setText(Float.toString(result));
 	}
 }
