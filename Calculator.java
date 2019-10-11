@@ -1,7 +1,15 @@
-import javax.swing.*;
-import java.awt.*;
+import java.awt.GridLayout;
+import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 
 public class Calculator {
@@ -237,7 +245,7 @@ public class Calculator {
 		
 	public static void addOperatorToField(String operator) {					// adds operator (+ - * /) to text field
 		String text = field.getText();
-		text = text + " " + operator + " ";
+		text = text + operator;
 		field.setText(text);
 	}
 	
@@ -258,48 +266,27 @@ public class Calculator {
 		char[] equationChar = equation.toCharArray();
 		String num1 = "";
 		String num2 = "";
-		boolean spaceHasHappened = false;
+		//char[] operatorArray = {'-', '+', '*', '/'};
+		boolean operatorPresent = false;
 		
-		for(int i = 0; i < equationChar.length; i++) {
-			if(equationChar[i] != ' ' && spaceHasHappened == false) {
-				num1 += equationChar[i];
-			}
-			else if(equationChar[i] == ' ' && i == 0) {
-				spaceHasHappened = false;
-			}
-			else if(equationChar[i] == ' ' && equationChar[i + 1] != '-') {
-				spaceHasHappened = true;
-			}
-				
-			else if(equationChar[i] == '+') {
-				operator = '+';			
-			}
-			else if(equationChar[i] == '-') {
-				if(i == 1){									//allows user to input negative numbers
-					spaceHasHappened = false;
-					//num1 += equationChar[i];
-					//backSpace(field);
-				}
-				else if(spaceHasHappened == true){
-					num2 += equationChar[i];
+		for(int i = 0; i < equationChar.length; i++) {	
+			if(equationChar[i] == '-' || equationChar[i] == '+' || equationChar[i] == '*' || equationChar[i] == '/'){
+				if(equationChar[i] == '-' && i == 0){
+					num1 += equationChar[i];
 				}
 				else{
-					operator = '-';
+					operator = equationChar[i];
+					operatorPresent = true;
+					continue;
 				}
 			}
-			else if(equationChar[i] == '*') {
-				operator = '*';
+			else if(operatorPresent == false){
+				num1 += equationChar[i];
 			}
-			else if(equationChar[i] == '/') {
-				operator = '/';
-			}
-			else if(equationChar[i] == ' ' && spaceHasHappened == true) {
-				continue;
-			}
-			else if(equationChar[i] != ' ' && spaceHasHappened == true) {
+			else if(operatorPresent == true){
 				num2 += equationChar[i];
 			}
-		}	
+		}
 		if(operator == '+') {
 			result = Float.parseFloat(num1) + Float.parseFloat(num2);
 		}
